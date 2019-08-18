@@ -1,17 +1,18 @@
 //COMMANDS: concert-this, spotify-this-song, movie-this, do-what-it-says
 
 require("dotenv").config();
-let fs = require("fs");
-//var keys = require("./keys.js");
-//var spotify = new Spotify(keys.spotify);
+const fs = require("fs");
+const axios = require("axios");
+let keys = require("./keys.js");
+let spotify = new Spotify(keys.spotify);
 let commands = process.argv[2];
-let artist = process[3];
+let parameter = process.argv[3];
 let queryUrl = "";
 
 switch (commands) {
   case "concert-this": {
-    console.log(commands)
-    queryUrl = "https://rest.bandsintown.com/artists/"+ artist +"/events?app_id=codingbootcamp";
+    let artist = parameter;
+    queryUrl = "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp";
     axiosFunction(queryUrl);
     break;
   }
@@ -29,14 +30,29 @@ switch (commands) {
   }
 }
 function axiosFunction(queryUrl) {
-  var axios = require("axios");
-
+  console.log(queryUrl);
   // Then run a request with axios to the OMDB API with the movie specified
-  axios.get("https://rest.bandsintown.com/artists/"+ artist +"/events?app_id=codingbootcamp").then(
-    function (response) {
-      console.log("The movie's rating is: " + response);
+  axios.get(queryUrl).then(
+    (response) => {
+      console.log(response.data.length);
+      //console.log(artist);
+      if (response.status === 200) {
+        let concertInfo = response.data
+        for (i = 0; i < concertInfo.length; i++) {
+          let dateTime = concertInfo[i].datetime;
+          let month = dateTime.substring(5, 7);
+          let year = dateTime.substring(0, 4);
+          let day = dateTime.substring(8, 10);
+          let dateForm = month + "/" + day + "/" + year
+          console.log("\n---------------------------------------------------\n");
+          console.log("Name of the venue: " + concertInfo[i].venue.name);
+          console.log("Venue Location: " + concertInfo[i].venue.city + ", " + concertInfo[i].venue.country);
+          console.log("Date of the Event: " + dateForm);
+        }
+      }
+
     })
-    .catch(function (error) {
+    .catch((error) => {
       if (error.response) {
         // The request was made and the server responded with a status code
         // that falls out of the range of 2xx
