@@ -3,8 +3,9 @@
 require("dotenv").config();
 const fs = require("fs");
 const axios = require("axios");
-let keys = require("./keys.js");
-let spotify = new Spotify(keys.spotify);
+const keys = require("./keys.js");
+const Spotify = require('node-spotify-api');
+const spotify = new Spotify(keys.spotify);
 let commands = process.argv[2];
 let parameter = process.argv[3];
 let queryUrl = "";
@@ -17,7 +18,8 @@ switch (commands) {
     break;
   }
   case "spotify-this-song": {
-    console.log(commands)
+    console.log(commands);
+    spotifySearch();
     break;
   }
   case "movie-this": {
@@ -38,17 +40,20 @@ function axiosFunction(queryUrl) {
       //console.log(artist);
       if (response.status === 200) {
         let concertInfo = response.data
-        for (i = 0; i < concertInfo.length; i++) {
-          let dateTime = concertInfo[i].datetime;
+        concertInfo.forEach(searchInfo => {
+          let dateTime = searchInfo.datetime;
           let month = dateTime.substring(5, 7);
           let year = dateTime.substring(0, 4);
           let day = dateTime.substring(8, 10);
           let dateForm = month + "/" + day + "/" + year
+
           console.log("\n---------------------------------------------------\n");
-          console.log("Name of the venue: " + concertInfo[i].venue.name);
-          console.log("Venue Location: " + concertInfo[i].venue.city + ", " + concertInfo[i].venue.country);
+          console.log(parameter + " Concert at:");
+          console.log("Name of the venue: " + searchInfo.venue.name);
+          console.log("Venue Location: " + searchInfo.venue.city + ", " + searchInfo.venue.country);
           console.log("Date of the Event: " + dateForm);
-        }
+          console.log("\n---------------------------------------------------\n");
+        })
       }
 
     })
@@ -72,4 +77,19 @@ function axiosFunction(queryUrl) {
       }
       console.log(error.config);
     });
+}
+
+function spotifySearch() {
+  spotify.search({ type: 'track', query: parameter }, (err, data) => {
+
+    if (err) throw new Error(JSON.stringify(err));
+    var songData = data.tracks.items[0];
+    console.log("\n---------------------------------------------------\n");
+    console.log("Spotify Song: " + parameter);
+    console.log("Artist(s): " + songData.artists[0].name);
+    console.log("Album: " + songData.album.name);
+    console.log("Song Title: " + songData.name);
+    console.log("Link: " + songData.external_urls.spotify);
+    console.log("\n---------------------------------------------------\n");
+  });
 }
