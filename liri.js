@@ -14,7 +14,7 @@ switch (commands) {
   case "concert-this": {
     let artist = parameter;
     queryUrl = "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp";
-    axiosFunction(queryUrl);
+    bandsintown(queryUrl);
     break;
   }
   case "spotify-this-song": {
@@ -23,7 +23,8 @@ switch (commands) {
     break;
   }
   case "movie-this": {
-    console.log(commands)
+    console.log(commands);
+    onmb();
     break;
   }
   case "do-what-it-says": {
@@ -31,7 +32,7 @@ switch (commands) {
     break;
   }
 }
-function axiosFunction(queryUrl) {
+function bandsintown(queryUrl) {
   console.log(queryUrl);
   // Then run a request with axios to the OMDB API with the movie specified
   axios.get(queryUrl).then(
@@ -77,19 +78,40 @@ function axiosFunction(queryUrl) {
       }
       console.log(error.config);
     });
-}
+};
 
 function spotifySearch() {
-  spotify.search({ type: 'track', query: parameter }, (err, data) => {
+  if (!parameter) { song = "The Sign" }
+  else { song = parameter };
+
+  spotify.search({ type: 'track', query: song }, (err, data) => {
 
     if (err) throw new Error(JSON.stringify(err));
     var songData = data.tracks.items[0];
     console.log("\n---------------------------------------------------\n");
-    console.log("Spotify Song: " + parameter);
+    console.log("Spotify Song: " + song);
     console.log("Artist(s): " + songData.artists[0].name);
     console.log("Album: " + songData.album.name);
     console.log("Song Title: " + songData.name);
     console.log("Link: " + songData.external_urls.spotify);
     console.log("\n---------------------------------------------------\n");
   });
+};
+
+function onmb() {
+  if (!parameter) { movieName = "Mr. Nobody" }
+  else { movieName = parameter };
+  queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy"
+  axios.get(queryUrl).then(
+    (response) => {
+      console.log("\n---------------------------------------------------\n");
+      console.log("Title of the movie: " + movieName);
+      console.log("Year the movie came out: " + response.data.Year);
+      console.log("IMDB Rating of the movie: " + response.data.Ratings[0].Value);
+      console.log("Rotten Tomatoes Rating of the movie: " + response.data.Ratings[1].Value);
+      console.log("Country where the movie was produced: " + response.data.Country);
+      console.log("Language of the movie: " + response.data.Language);
+      console.log("Plot of the movie: " + response.data.Plot);
+      console.log("Actors in the movie: " + response.data.Actors);
+    })
 }
