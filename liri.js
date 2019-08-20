@@ -9,36 +9,41 @@ const spotify = new Spotify(keys.spotify);
 let commands = process.argv[2];
 let parameter = process.argv[3];
 let queryUrl = "";
+let dataArr = [];
 
-switch (commands) {
-  case "concert-this": {
-    let artist = parameter;
-    queryUrl = "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp";
-    bandsintown(queryUrl);
-    break;
-  }
-  case "spotify-this-song": {
-    console.log(commands);
-    spotifySearch();
-    break;
-  }
-  case "movie-this": {
-    console.log(commands);
-    onmb();
-    break;
-  }
-  case "do-what-it-says": {
-    console.log(commands)
-    break;
+function start() {
+  switch (commands) {
+    case "concert-this": {
+      let artist = parameter;
+      queryUrl = "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp";
+      bandsintown(queryUrl);
+      break;
+    }
+    case "spotify-this-song": {
+      console.log(commands);
+      spotifySearch();
+      break;
+    }
+    case "movie-this": {
+      console.log(commands);
+      onmb();
+      break;
+    }
+    case "do-what-it-says": {
+      console.log(commands);
+      doWhatitSays();
+      break;
+    }
   }
 }
+
+start();
+
 function bandsintown(queryUrl) {
   console.log(queryUrl);
   // Then run a request with axios to the OMDB API with the movie specified
   axios.get(queryUrl).then(
     (response) => {
-      console.log(response.data.length);
-      //console.log(artist);
       if (response.status === 200) {
         let concertInfo = response.data
         concertInfo.forEach(searchInfo => {
@@ -46,17 +51,22 @@ function bandsintown(queryUrl) {
           let month = dateTime.substring(5, 7);
           let year = dateTime.substring(0, 4);
           let day = dateTime.substring(8, 10);
-          let dateForm = month + "/" + day + "/" + year
-
+          let dateForm = month + "/" + day + "/" + year;
           console.log("\n---------------------------------------------------\n");
+          logText("---------------------------------------------------");
           console.log(parameter + " Concert at:");
+          logText(parameter + " Concert at:");
           console.log("Name of the venue: " + searchInfo.venue.name);
+          logText("Name of the venue: " + searchInfo.venue.name);
           console.log("Venue Location: " + searchInfo.venue.city + ", " + searchInfo.venue.country);
+          logText("Venue Location: " + searchInfo.venue.city + ", " + searchInfo.venue.country);
           console.log("Date of the Event: " + dateForm);
+          logText("Date of the Event: " + dateForm);
           console.log("\n---------------------------------------------------\n");
+          logText("---------------------------------------------------");
         })
       }
-
+      console.log("Content Added!");
     })
     .catch((error) => {
       if (error.response) {
@@ -114,4 +124,37 @@ function onmb() {
       console.log("Plot of the movie: " + response.data.Plot);
       console.log("Actors in the movie: " + response.data.Actors);
     })
+}
+
+function doWhatitSays() {
+
+  fs.readFile("random.txt", "utf8", function (err, data) {
+    if (err) {
+      return console.log(err);
+    }
+
+    // Break down all the numbers inside
+    data = data.split(", ");
+    console.log(data);
+    commands = data[0];
+    parameter = data[1];
+    start(commands, parameter);
+  })
+}
+
+function logText(datalog) {
+  
+    
+    fs.appendFile("log.txt", `\n${datalog}` , function (err) {
+
+      // If an error was experienced we will log it.
+      if (err) {
+        console.log(err);
+      }
+
+      // If no error is experienced, we'll log the phrase "Content Added" to our node console.
+      else {
+
+      }
+    });
 }
