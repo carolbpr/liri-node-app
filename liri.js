@@ -9,28 +9,23 @@ const spotify = new Spotify(keys.spotify);
 let commands = process.argv[2];
 let parameter = process.argv[3];
 let queryUrl = "";
-let dataArr = [];
+let file = "";
 
 function start() {
   switch (commands) {
     case "concert-this": {
-      let artist = parameter;
-      queryUrl = "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp";
-      bandsintown(queryUrl);
+      bandsintown();
       break;
     }
     case "spotify-this-song": {
-      console.log(commands);
       spotifySearch();
       break;
     }
     case "movie-this": {
-      console.log(commands);
       onmb();
       break;
     }
     case "do-what-it-says": {
-      console.log(commands);
       doWhatitSays();
       break;
     }
@@ -39,9 +34,10 @@ function start() {
 
 start();
 
-function bandsintown(queryUrl) {
+function bandsintown() {
+  logText(file + "REQUEST: " + commands + " " + parameter);
+  queryUrl = "https://rest.bandsintown.com/artists/" + parameter + "/events?app_id=codingbootcamp";
   console.log(queryUrl);
-  // Then run a request with axios to the OMDB API with the movie specified
   axios.get(queryUrl).then(
     (response) => {
       if (response.status === 200) {
@@ -66,95 +62,87 @@ function bandsintown(queryUrl) {
           logText("---------------------------------------------------");
         })
       }
-      console.log("Content Added!");
     })
     .catch((error) => {
-      if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
-        console.log("---------------Data---------------");
-        console.log(error.response.data);
-        console.log("---------------Status---------------");
-        console.log(error.response.status);
-        console.log("---------------Status---------------");
-        console.log(error.response.headers);
-      } else if (error.request) {
-        // The request was made but no response was received
-        // `error.request` is an object that comes back with details pertaining to the error that occurred.
-        console.log(error.request);
-      } else {
-        // Something happened in setting up the request that triggered an Error
-        console.log("Error", error.message);
-      }
       console.log(error.config);
     });
+  console.log("Log file has been updated!");
 };
 
 function spotifySearch() {
+  logText(file + "REQUEST: " + commands + " " + parameter);
   if (!parameter) { song = "The Sign" }
   else { song = parameter };
-
   spotify.search({ type: 'track', query: song }, (err, data) => {
-
     if (err) throw new Error(JSON.stringify(err));
     var songData = data.tracks.items[0];
     console.log("\n---------------------------------------------------\n");
+    logText("---------------------------------------------------");
     console.log("Spotify Song: " + song);
+    logText("Spotify Song: " + song);
     console.log("Artist(s): " + songData.artists[0].name);
+    logText("Artist(s): " + songData.artists[0].name);
     console.log("Album: " + songData.album.name);
+    logText("Album: " + songData.album.name);
     console.log("Song Title: " + songData.name);
+    logText("Song Title: " + songData.name);
     console.log("Link: " + songData.external_urls.spotify);
+    logText("Link: " + songData.external_urls.spotify);
     console.log("\n---------------------------------------------------\n");
+    logText("---------------------------------------------------");
   });
+  console.log("Log file has been updated!");
 };
 
 function onmb() {
+  logText(file + "REQUEST: " + commands + " " + parameter);
   if (!parameter) { movieName = "Mr. Nobody" }
   else { movieName = parameter };
   queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy"
   axios.get(queryUrl).then(
     (response) => {
       console.log("\n---------------------------------------------------\n");
+      logText("\n---------------------------------------------------\n");
       console.log("Title of the movie: " + movieName);
+      logText("Title of the movie: " + movieName);
       console.log("Year the movie came out: " + response.data.Year);
+      logText("Year the movie came out: " + response.data.Year);
       console.log("IMDB Rating of the movie: " + response.data.Ratings[0].Value);
+      logText("IMDB Rating of the movie: " + response.data.Ratings[0].Value);
       console.log("Rotten Tomatoes Rating of the movie: " + response.data.Ratings[1].Value);
+      logText("Rotten Tomatoes Rating of the movie: " + response.data.Ratings[1].Value);
       console.log("Country where the movie was produced: " + response.data.Country);
+      logText("Country where the movie was produced: " + response.data.Country);
       console.log("Language of the movie: " + response.data.Language);
+      logText("Language of the movie: " + response.data.Language);
       console.log("Plot of the movie: " + response.data.Plot);
+      logText("Plot of the movie: " + response.data.Plot);
       console.log("Actors in the movie: " + response.data.Actors);
+      logText("Actors in the movie: " + response.data.Actors);
     })
-}
+  console.log("Log file has been updated!");
+};
 
 function doWhatitSays() {
-
+  logText("REQUEST: " + commands);
+  file = "FILE COMMANDS ";
   fs.readFile("random.txt", "utf8", function (err, data) {
     if (err) {
       return console.log(err);
     }
-
-    // Break down all the numbers inside
+    // Get the command and parameter from file
     data = data.split(", ");
-    console.log(data);
     commands = data[0];
     parameter = data[1];
-    start(commands, parameter);
+    start();
   })
-}
+};
 
 function logText(datalog) {
-  
-    
-    fs.appendFile("log.txt", `\n${datalog}` , function (err) {
-
-      // If an error was experienced we will log it.
-      if (err) {
-        console.log(err);
-      }
-
-      // If no error is experienced, we'll log the phrase "Content Added" to our node console.
-      else {
-
-      }
-    });
-}
+  fs.appendFileSync("log.txt", `\n${datalog}`, function (err) {
+    // If an error was experienced we will log it.
+    if (err) {
+      console.log(err);
+    }
+  });
+};
