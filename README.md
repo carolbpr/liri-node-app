@@ -1,6 +1,6 @@
 LIRI NODE APP
 
-![](https://github.com/carolbpr/liri-node-app)
+![a link](https://github.com/carolbpr/liri-node-app)
 
 
 Author: Carolina(Caro) Berry
