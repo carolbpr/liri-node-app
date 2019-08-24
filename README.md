@@ -62,8 +62,11 @@ declare command line variables (command, parameter, queryUrl,file)
 switchCase(); switch statement holding:
 
 bandsintown();
+
 spotifySearch()
+
 onmb();
+
 doWhatitSays();
 
 call start() to run the program
