@@ -74,7 +74,7 @@ after finished with the function the log file is updated.
 - For spotifySearch() the parameter is the song on search, however is a song is not typed in then by default
 will bring the info for "The Sign". After function is finished the log file is updated.
 
-- For onmb() the parameter is the artist (or band) on search and get the information through axious, after finished with the 
+- For onmb() the parameter is the movie on search and if a movie is not typed in they by default will bring the infor for "Mr. Nobody". The function get the information through axious, after finished with the 
 function the log file is updated.
 
 - For doWhatitSays() it reads the random.txt file to get the command and parameter and call the function required.
