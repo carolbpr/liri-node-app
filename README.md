@@ -4,4 +4,4 @@ Feel free to use some or all of this code if you're trying to complete a similar
 
 App demo
 
-![Concert This](screenshots/concert-this.png)
+![Concert This](liri.mp4)
