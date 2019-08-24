@@ -14,18 +14,20 @@ node liri.js movie-this "movie name here" to return movie information from OMDb.
 ![](screenshots/movie-this.png)
 node liri.js do-what-it-says to return information stored in random.txt
 ![](screenshots/do-what-it-says.png)
+
 Technology and packages used
-Node.js
 
-axious
+- Node.js
 
-fs
+- axious
 
-Bandsintown API
+- fs
 
-OMDb API
+- Bandsintown API
 
-Spotify API
+- OMDb API
+
+- Spotify API
 
 Below is a thorough, but not comprehensive, step-by-step process of how I got the app running in terms of code
 Navigate to root of project. Initialize package.json by running npm init -y
