@@ -4,4 +4,4 @@ Feel free to use some or all of this code if you're trying to complete a similar
 
 App demo
 
-![alt text](liri-js.webm)
+![](https>//github.com/carolbpr.liri-node-app/blob/master/liri-js.webm)
