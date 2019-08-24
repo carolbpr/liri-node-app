@@ -1,13 +1,14 @@
-LIRI NODE APP
+<h2>LIRI NODE APP</h2>
+<hr>
+![Liri Node App](https://github.com/carolbpr/liri-node-app "Liri Node App")
+<hr>
 
-![Liri Node App](https://github.com/carolbpr/liri-node-app)
-
-
-Author: Carolina(Caro) Berry
-
+<h3>Author: Carolina(Caro) Berry</3>
+<hr>
 Feel free to use some or all of this code if you're trying to complete a similar project.
 
-Project overview
+<h4>Project overview</h4>
+<hr>
 LIRI is a command line Node app that takes in parameters and returns data from the following APIs: Bandsintown, Spotify and OMDb.
 How it works
 Type into the command line....
